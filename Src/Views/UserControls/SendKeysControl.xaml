@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="MacroH.Views.SendKeysControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MacroH.Views"
+             xmlns:models="clr-namespace:MacroH.Models"
+             xmlns:converters="clr-namespace:MacroH.Converters"
+             mc:Ignorable="d" 
+             Name="root"
+             d:DesignHeight="50" d:DesignWidth="800">
+  <UserControl.Resources>
+    <converters:SendKeysActionConverter x:Key="SendKeysActionConverter"/>
+    <Style TargetType="TextBox">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type TextBox}">
+            <Border x:Name="border"                
+                BorderThickness="0 0 0 1"
+                BorderBrush="HotPink"
+                Background="{TemplateBinding Background}">
+              <ScrollViewer x:Name="PART_ContentHost" />
+            </Border>
+
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style TargetType="RadioButton">
+      <Setter Property="Height" Value="20"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Resources>
+  <Grid Height="50">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="100"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="auto"/>
+    </Grid.ColumnDefinitions>
+
+    <TextBlock Grid.Column="0" 
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center"
+               FontSize="20"
+               Text="SendKeys"/>
+
+    <TextBox Grid.Column="1" Margin="10 5" Background="Transparent" VerticalContentAlignment="Center" 
+             Text="{Binding ElementName=root,Path=Text, UpdateSourceTrigger=PropertyChanged}" Width="auto"/>
+    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+      <RadioButton Content="SendKeys" 
+                   Command="{Binding SendKeysActionCommand}"
+                   CommandParameter="{x:Static models:SendKeysAction.SendKeys}"                   
+                   IsChecked="{Binding SendKeysAction, 
+        Converter={StaticResource SendKeysActionConverter}, 
+        ConverterParameter={x:Static models:SendKeysAction.SendKeys}}"/>
+      <RadioButton Content="OnlyText"                    
+                   Command="{Binding SendKeysActionCommand}"
+                   CommandParameter="{x:Static models:SendKeysAction.OnlyText}"
+                   IsChecked="{Binding SendKeysAction, 
+        Converter={StaticResource SendKeysActionConverter}, 
+        ConverterParameter={x:Static models:SendKeysAction.OnlyText}}"/>
+    </StackPanel>
+    <Separator Grid.Column="3"  Style="{StaticResource Style_Separators_Vertical_Pink}" />
+    <local:DelaySecControl DelaySec="{Binding DelaySec}" Grid.Column="4"/>
+  </Grid>
+</UserControl>
